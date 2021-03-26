@@ -21,7 +21,7 @@ namespace ParticleEngine.Particles
         {
             isActive = false;
             rainDirection = 270;
-            rainColour = Color.AliceBlue;
+            rainColour = Color.LightSkyBlue;
             rainIntensity = 3;
             pList = new List<Particle>();
             rnd = new Random();

@@ -35,7 +35,7 @@ namespace ParticleEngine.Screens
             for (int x = 0; x <= 99; x++)
             {
                 TreeInformaton _newTree = new TreeInformaton();
-                _newTree.SourcePos = new Rectangle(_newRandom.Next(0, 11) * 192, _newRandom.Next(0, 7) * 384, 192, 384);
+                _newTree.SourcePos = new Rectangle(_newRandom.Next(0, 11) * 192, _newRandom.Next(0, 8) * 384, 192, 384);
                 _newTree.ScreenPos = new Rectangle(_newRandom.Next(-192, GlobalVars.GameSize.Width), _newRandom.Next(-384, GlobalVars.GameSize.Height), 192, 384);
 
                 bool _treeOkayToAdd = true;
@@ -146,7 +146,7 @@ namespace ParticleEngine.Screens
 
             if (UserInput.KeyPressed(Keys.D))
             {
-                rainEffect.ChangeRainColour(Color.AliceBlue);
+                rainEffect.ChangeRainColour(Color.LightSkyBlue);
             }
 
             if (UserInput.KeyPressed(Keys.Up))
@@ -167,11 +167,5 @@ namespace ParticleEngine.Screens
             }
         }
 
-    }
-
-    public struct TreeInformaton
-    {
-        public Rectangle ScreenPos;
-        public Rectangle SourcePos;
     }
 }

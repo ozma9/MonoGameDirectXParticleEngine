@@ -17,4 +17,9 @@ namespace ParticleEngine.Globals
         public static bool WindowFocused;
         public static Rectangle GameSize;
     }
+    public struct TreeInformaton
+    {
+        public Rectangle ScreenPos;
+        public Rectangle SourcePos;
+    }
 }
