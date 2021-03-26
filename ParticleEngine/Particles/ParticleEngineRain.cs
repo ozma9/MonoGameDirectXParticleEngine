@@ -9,7 +9,15 @@ namespace ParticleEngine.Particles
 {
     class ParticleEngineRain
     {
-        private List<Particle> pList;
+      //Setup the class
+      // - Declare a list of rain particles to iterate through
+      // - Random number for variablity
+      // - A boolean value to switch on and off the rain
+      // - An int to hold the value for the min and max amount of rain
+      // - An int to hold the value of the direction of rain (later converted into a radius
+      // - A colour variable to determine the colour of the rain
+
+        private List<RainParticle> particleList;
         private Random rnd;
 
         private bool isActive;
@@ -19,11 +27,22 @@ namespace ParticleEngine.Particles
 
         public ParticleEngineRain()
         {
+            //Begin the class with the rain stopped
             isActive = false;
+
+            //Declare the starting direction of the rain (default 270 - downwards)
             rainDirection = 270;
+
+            //Declare the rain colour (blueish)
             rainColour = Color.LightSkyBlue;
+
+            //Define rain intensity (default 3 - low)
             rainIntensity = 3;
-            pList = new List<Particle>();
+
+            //Initiate the particle list
+            particleList = new List<RainParticle>();
+
+            //Initiate the RNG
             rnd = new Random();
         }
 
@@ -31,9 +50,12 @@ namespace ParticleEngine.Particles
         {
             GlobalVars.SpriteBatch.Begin();
 
-            for (int x = pList.Count - 1; x >= 0; x += -1)
+            //Draws the rain to screen
+            // - The for loop will step backward through the particle list, drawing the most recently added first and the oldest last
+
+            for (int x = particleList.Count - 1; x >= 0; x--)
             {
-                Particle p = pList[x];
+                RainParticle p = particleList[x];
                 GlobalVars.SpriteBatch.Draw(Textures.pixel, new Rectangle((int)p.screenPos.X, (int)p.screenPos.Y, (int)p.particleScale.X, (int)p.particleScale.Y), new Rectangle(0, 0, 1, 1), p.Colour * MathHelper.Clamp((p.particleAliveTime / p.particleAliveTick - 1), 0, 1), p.particleRotation, new Vector2(MathHelper.ToRadians(p.particleDirection), 0), SpriteEffects.None, 0);
             }
 
@@ -46,7 +68,7 @@ namespace ParticleEngine.Particles
             {
                 for (int x = 0; x <= rainIntensity; x++)
                 {
-                    Particle _p = new Particle();
+                    RainParticle _p = new RainParticle();
 
                     _p.Colour = rainColour;
                     _p.screenPos = new Vector2(rnd.Next(-150, (int)GlobalVars.GameSize.Width + 150), 0);
@@ -57,14 +79,14 @@ namespace ParticleEngine.Particles
                     _p.particleSpeed = _p.particleScale.X;
                     _p.particleRotation = -MathHelper.ToRadians(_p.particleDirection);
 
-                    pList.Add(_p);
+                    particleList.Add(_p);
                 }
             }
 
 
-            List<Particle> removeParticles = new List<Particle>();
+            List<RainParticle> removeParticles = new List<RainParticle>();
 
-            foreach (Particle _p in pList)
+            foreach (RainParticle _p in particleList)
             {
                 _p.particleAliveTick += 1;
 
@@ -74,9 +96,9 @@ namespace ParticleEngine.Particles
                 _p.screenPos.Y = (int)(_p.screenPos.Y + (-Math.Sin(MathHelper.ToRadians(_p.particleDirection)) * _p.particleSpeed));
             }
 
-            foreach (Particle _p in removeParticles)
+            foreach (RainParticle _p in removeParticles)
             {
-                pList.Remove(_p);
+                particleList.Remove(_p);
             }
         }
 
@@ -118,13 +140,15 @@ namespace ParticleEngine.Particles
 
         public int GetParticleCount()
         {
-            return pList.Count;
+            return particleList.Count;
         }
 
     }
 
-    class Particle
+    class RainParticle
     {
+        //Base class for the rain particles
+
         public Vector2 screenPos;
         public float particleSpeed;
         public float particleDirection;
