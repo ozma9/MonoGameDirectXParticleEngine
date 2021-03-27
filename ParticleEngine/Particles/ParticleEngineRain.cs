@@ -71,7 +71,7 @@ namespace ParticleEngine.Particles
                     RainParticle _p = new RainParticle();
 
                     _p.Colour = rainColour;
-                    _p.screenPos = new Vector2(rnd.Next(-150, (int)GlobalVars.GameSize.Width + 150), 0);
+                    _p.screenPos = new Vector2(rnd.Next(-150, GlobalVars.GameSize.Width + 150), 0);
                     _p.particleDirection = rainDirection;
                     _p.particleScale.X = rnd.Next(4, 9);
                     _p.particleScale.Y = 1;

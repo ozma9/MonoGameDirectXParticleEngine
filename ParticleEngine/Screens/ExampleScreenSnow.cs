@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ParticleEngine.Globals;
+using ParticleEngine.Particles;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,17 @@ namespace ParticleEngine.Screens
     class ExampleScreenSnow : BaseScreen
     {
         private List<TreeInformaton> treeList;
+        private ParticleEngineSnow snowEffect;
+
+        string helpTextString;
+        Vector2 helpTextPos;
+        int updateTxtTmr;
         public ExampleScreenSnow()
         {
+            snowEffect = new ParticleEngineSnow();
             SetupTrees();
+            UpdateHelpText();
+            screenName = "Snow";
         }
         private void SetupTrees()
         {
@@ -44,6 +53,24 @@ namespace ParticleEngine.Screens
 
         }
 
+        private void UpdateHelpText()
+        {
+            helpTextString =
+              "--- Snow Particle Effects ---" + Environment.NewLine + Environment.NewLine +
+              "Particle Count: " + snowEffect.GetParticleCount() + Environment.NewLine +
+              "Snow intensity: " + snowEffect.GetSnowIntensity() + Environment.NewLine +
+              "Space: Start/Stop" + Environment.NewLine +
+              "Q: Apply wind" + Environment.NewLine +
+              "W: Remove wind" + Environment.NewLine +
+              "Up Key: Increase snow intensity" + Environment.NewLine +
+              "Down Key: Decrease snow intensity";
+
+            helpTextPos = new Vector2(
+                GlobalVars.GameSize.Width - Fonts.Calibri.MeasureString(helpTextString).X,
+                GlobalVars.GameSize.Height - Fonts.Calibri.MeasureString(helpTextString).Y
+                );
+        }
+
         public override void Draw()
         {
             GlobalVars.SpriteBatch.Begin();
@@ -55,12 +82,31 @@ namespace ParticleEngine.Screens
                 GlobalVars.SpriteBatch.Draw(Textures.trees, _tree.ScreenPos, _tree.SourcePos, Color.White);
             }
 
+            GlobalVars.SpriteBatch.Draw(Textures.pixel, new Rectangle(
+              (int)helpTextPos.X,
+              (int)helpTextPos.Y,
+              GlobalVars.GameSize.Width - (int)helpTextPos.X,
+              GlobalVars.GameSize.Height - (int)helpTextPos.Y),
+              Color.Black * .5f);
+
+            GlobalVars.SpriteBatch.DrawString(Fonts.Calibri, helpTextString, helpTextPos, Color.White);
+
             GlobalVars.SpriteBatch.End();
+
+            snowEffect.DrawSnow();
         }
 
         public override void Update()
         {
-          
+            snowEffect.Update();
+
+            updateTxtTmr -= (int)GlobalVars.GameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (updateTxtTmr < 0)
+            {
+                updateTxtTmr = 500;
+                UpdateHelpText();
+            }
         }
 
         public override void HandleInput()
@@ -68,6 +114,33 @@ namespace ParticleEngine.Screens
             if (UserInput.KeyPressed(Keys.D1))
             {
                 SetupTrees();
+            }
+
+            if (UserInput.KeyPressed(Keys.Up))
+            {
+                snowEffect.ChangeSnowIntensity(1);
+                UpdateHelpText();
+            }
+
+            if (UserInput.KeyPressed(Keys.Down))
+            {
+                snowEffect.ChangeSnowIntensity(-1);
+                UpdateHelpText();
+            }
+
+            if (UserInput.KeyPressed(Keys.Space))
+            {
+                snowEffect.ToggleSnow();
+            }
+
+            if (UserInput.KeyPressed(Keys.Q))
+            {
+                snowEffect.ChangeSnowDir(-55);
+            }
+
+            if (UserInput.KeyPressed(Keys.W))
+            {
+                snowEffect.ChangeSnowDir(0);
             }
         }
 

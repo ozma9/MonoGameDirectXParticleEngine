@@ -24,6 +24,7 @@ namespace ParticleEngine.Screens
 
             UpdateHelpText();
             updateTxtTmr = 250;
+            screenName = "Rain";
 
         }
 
@@ -164,6 +165,12 @@ namespace ParticleEngine.Screens
             if (UserInput.KeyPressed(Keys.D1))
             {
                 SetupTrees();
+            }
+
+            if (UserInput.KeyPressed(Keys.P))
+            {
+                ScreenManager.AddScreen(new ExampleScreenSnow());
+                ScreenManager.UnloadScreen(screenName);
             }
         }
 
