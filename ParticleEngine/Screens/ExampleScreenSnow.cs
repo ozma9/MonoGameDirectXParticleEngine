@@ -28,6 +28,7 @@ namespace ParticleEngine.Screens
             treeList = new List<TreeInformaton>();
             Random _newRandom = new Random();
 
+            //Generate a list of trees for the background
             for (int x = 0; x <= 99; x++)
             {
                 TreeInformaton _newTree = new TreeInformaton();
@@ -38,6 +39,7 @@ namespace ParticleEngine.Screens
 
                 foreach (TreeInformaton _tree in treeList)
                 {
+                    //Avoid placing trees on top of one another
                     if (_tree.ScreenPos.Contains(_newTree.ScreenPos))
                     {
                         _treeOkayToAdd = false;
@@ -55,6 +57,7 @@ namespace ParticleEngine.Screens
 
         private void UpdateHelpText()
         {
+            //Generate help string to be displayed on screen
             helpTextString =
               "--- Snow Particle Effects ---" + Environment.NewLine + Environment.NewLine +
               "Particle Count: " + snowEffect.GetParticleCount() + Environment.NewLine +
@@ -77,11 +80,13 @@ namespace ParticleEngine.Screens
 
             GlobalVars.SpriteBatch.Draw(Textures.snow, GlobalVars.GameSize, Color.White);
 
+            //Draw all trees to screen
             foreach (TreeInformaton _tree in treeList)
             {
                 GlobalVars.SpriteBatch.Draw(Textures.trees, _tree.ScreenPos, _tree.SourcePos, Color.White);
             }
 
+            //Draw the background grass texture
             GlobalVars.SpriteBatch.Draw(Textures.pixel, new Rectangle(
               (int)helpTextPos.X,
               (int)helpTextPos.Y,
@@ -89,10 +94,12 @@ namespace ParticleEngine.Screens
               GlobalVars.GameSize.Height - (int)helpTextPos.Y),
               Color.Black * .5f);
 
+            //Draw the help text
             GlobalVars.SpriteBatch.DrawString(Fonts.Calibri, helpTextString, helpTextPos, Color.White);
 
             GlobalVars.SpriteBatch.End();
 
+            //Draw the rain effects from the particle class
             snowEffect.DrawSnow();
         }
 
@@ -102,6 +109,7 @@ namespace ParticleEngine.Screens
 
             updateTxtTmr -= (int)GlobalVars.GameTime.ElapsedGameTime.TotalMilliseconds;
 
+            //Update the help text with the particle information every 500ms
             if (updateTxtTmr < 0)
             {
                 updateTxtTmr = 500;

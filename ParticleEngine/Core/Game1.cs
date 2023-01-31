@@ -61,8 +61,8 @@ namespace ParticleEngine
             Sounds.Load();
 
             //Add the example screen to the Screen Manager
-            ScreenManager.AddScreen(new ExampleScreenRain());
-            //ScreenManager.AddScreen(new ExampleScreenSnow());
+            ScreenManager.AddScreen(new ExampleScreenRain()); //comment this line for the snow screen
+            //ScreenManager.AddScreen(new ExampleScreenSnow()); //uncomment this line for the snow screen
         }
 
         protected override void Update(GameTime gameTime)

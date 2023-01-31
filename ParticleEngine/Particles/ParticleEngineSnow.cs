@@ -55,6 +55,7 @@ namespace ParticleEngine.Particles
 
         public void Update()
         {
+            //Update the particle list but only if the screen has focus
             if (isActive)
             {
                 for (int x = 0; x <= snowIntensity; x++)
@@ -74,6 +75,10 @@ namespace ParticleEngine.Particles
                 }
             }
 
+
+            //Remove old particles
+            // - Do this by creating a new list of particles and then removing them based upon the removeParticles list
+            // - This method prevents the "collection was modified" exception
 
             List<SnowParticle> removeParticles = new List<SnowParticle>();
 
