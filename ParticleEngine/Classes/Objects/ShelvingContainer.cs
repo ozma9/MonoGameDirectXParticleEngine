@@ -8,47 +8,95 @@ namespace ParticleEngine.Classes.Containers
 {
     class Fixture
     {
-        private Fixturing Type;
-        private List<ProductHolder> ProductShelves;
-        private List<ShelvingContainer> Shelving;
-        private readonly int MaxCapacity;
+        private Fixturing type;
+        private List<ProductHolder> productShelves;
+        private List<ShelvingContainer> wareHouseRacking;
+        private readonly byte maxCapacity;
+
+        public Fixturing Type => type;
+        public List<ProductHolder> ProductShelves => productShelves;
+        public List<ShelvingContainer> WareHouseRacking => wareHouseRacking;
+        public byte MaxCapacity => maxCapacity;
+
 
         public Fixture(Fixturing _type)
         {
-            Type = _type;
-            ProductShelves = new List<ProductHolder>();
-            Shelving = new List<ShelvingContainer>();
+            type = _type;
+            productShelves = new List<ProductHolder>();
+            wareHouseRacking = new List<ShelvingContainer>();
 
-            switch (Type)
+            switch (type)
             {
                 case Fixturing.ShopFloorDisplay:
 
-                    MaxCapacity = 4;
+                    maxCapacity = 4;
 
                     break;
                 case Fixturing.WarehouseRacking:
 
-                    MaxCapacity = 5;
+                    maxCapacity = 5;
 
                     break;
             }
 
-            for (int x = 0; x <= MaxCapacity; x++)
+            for (int x = 0; x <= maxCapacity; x++)
             {
-                switch (Type)
+                switch (type)
                 {
                     case Fixturing.ShopFloorDisplay:
-                        ProductShelves.Add(new ProductHolder(ProductContainers.DisplayShelf));
+                        productShelves.Add(new ProductHolder(ProductContainers.DisplayShelf));
 
                         break;
                     case Fixturing.WarehouseRacking:
-                        Shelving.Add(new ShelvingContainer(ShelvingContainers.WarehouseRack));
+                        wareHouseRacking.Add(new ShelvingContainer(ShelvingContainers.WarehouseRack));
 
                         break;
                 }
             }
 
         }
+
+        public bool AddProductsToShelf(Product _product)
+        {
+            foreach (ProductHolder _shelves in productShelves)
+            {
+                if (_shelves.AddProduct(_product)) return true;
+            }
+
+            return false;
+        }
+
+        public bool AddContainersToRacking(ProductHolder _productHolder)
+        {
+            foreach (ShelvingContainer _rack in wareHouseRacking)
+            {
+                if (_rack.AddProductHolder(_productHolder)) return true;
+            }
+
+            return false;
+        }
+
+        public bool RemoveProductsFromShelf(Product _product)
+        {
+            foreach (ProductHolder _shelves in productShelves)
+            {
+                if (_shelves.RemoveProduct(_product)) return true;
+            }
+
+            return false;
+        }
+
+        public bool RemoveContainersFromRacking(ProductHolder _productHolder)
+        {
+            foreach (ShelvingContainer _rack in wareHouseRacking)
+            {
+                if (_rack.RemoveProductHolder(_productHolder)) return true;
+            }
+
+            return false;
+        }
+
+
     }
 
     class StockTransport
@@ -56,7 +104,7 @@ namespace ParticleEngine.Classes.Containers
         private Transport Type;
         private List<ProductHolder> ProductShelves;
         private List<ShelvingContainer> Shelving;
-        private readonly int MaxCapacity;
+        private readonly byte MaxCapacity;
 
         public StockTransport(Transport _type)
         {
@@ -96,7 +144,7 @@ namespace ParticleEngine.Classes.Containers
     {
         private ShelvingContainers Type;
         private List<ProductHolder> ProductHolders;
-        private readonly int MaxCapacity;
+        private readonly byte MaxCapacity;
 
         public ShelvingContainer(ShelvingContainers _type)
         {
@@ -114,39 +162,114 @@ namespace ParticleEngine.Classes.Containers
             }
 
         }
+
+        public bool AddProductHolder(ProductHolder _holderToAdd)
+        {
+            if (ProductHolders.Count < MaxCapacity)
+            {
+                ProductHolders.Add(_holderToAdd);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool RemoveProductHolder(ProductHolder _holderToRemove)
+        {
+            foreach (ProductHolder _foundHolder in ProductHolders)
+            {
+                if (_foundHolder == _holderToRemove)
+                {
+                    ProductHolders.Remove(_foundHolder);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 
     class ProductHolder
     {
-        private ProductContainers Type;
-        private List<Product> Products;
-        private readonly int MaxCapacity;
+        private ProductContainers type;
+        private List<Product> products;
+        private readonly byte facings; //Only used for displayshelf
+        private readonly byte fillCapacity; //Only used for displayshelf
+        private readonly byte overallMaxCapacity;
+
+        public ProductContainers Type => type;
+        public List<Product> Products => products;
+        public byte MaxCapacity => overallMaxCapacity;
         public ProductHolder(ProductContainers _type)
         {
-            Type = _type;
-            Products = new List<Product>();
+            type = _type;
+            products = new List<Product>();
 
-            switch (Type)
+            switch (type)
             {
                 case ProductContainers.DisplayShelf:
-                    MaxCapacity = 10;
+                    facings = 10;
+                    fillCapacity = 5;
+                    overallMaxCapacity = (byte)(facings * fillCapacity);
                     break;
                 case ProductContainers.CardboardBox:
-                    MaxCapacity = 20;
+                    overallMaxCapacity = 50;
                     break;
                 case ProductContainers.Tote:
-                    MaxCapacity = 30;
+                    overallMaxCapacity = 35;
                     break;
                 case ProductContainers.CustomerBasket:
-                    MaxCapacity = 25;
+                    overallMaxCapacity = 25;
                     break;
                 case ProductContainers.CustomerTrolley:
-                    MaxCapacity = 100;
+                    overallMaxCapacity = 100;
                     break;
                 case ProductContainers.WoWShelf:
-                    MaxCapacity = 20;
+                    overallMaxCapacity = 100;
                     break;
             }
+        }
+
+        public bool AddProduct(Product _productToAdd)
+        {
+            if (type == ProductContainers.DisplayShelf)
+            {
+                foreach (Product _foundProduct in products)
+                {
+                    if (_productToAdd == _foundProduct && _foundProduct.Stock < fillCapacity)// && products.Count < overallMaxCapacity)
+                    {
+                        _foundProduct.ModifiyStock(1);
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+
+            if (products.Count < overallMaxCapacity)
+            {
+                products.Add(_productToAdd);
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public bool RemoveProduct(Product _productToRemove)
+        {
+            foreach (Product _foundProduct in products)
+            {
+                if (_foundProduct == _productToRemove)
+                {
+                    products.Remove(_foundProduct);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }

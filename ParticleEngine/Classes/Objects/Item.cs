@@ -26,6 +26,11 @@ namespace ParticleEngine.Classes.Objects
         {
 
         }
+
+        public void ModifiyStock(int _amount)
+        {
+            stock += (byte)_amount;
+        }
     }
 
     class Rubbish
