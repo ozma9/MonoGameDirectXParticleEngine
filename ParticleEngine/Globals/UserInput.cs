@@ -54,5 +54,13 @@ namespace ParticleEngine.Globals
                 return true;
             return false;
         }
+
+
+        public static bool MiddleMouseDown()
+        {
+            if (CurrentMouseState.MiddleButton == ButtonState.Pressed) return true;
+
+            return false;
+        }
     }
 }

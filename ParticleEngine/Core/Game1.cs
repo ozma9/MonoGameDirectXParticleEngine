@@ -53,6 +53,7 @@ namespace ParticleEngine
             //Initialize the spritebatch and declare the content directory
             GlobalVars.SpriteBatch = new SpriteBatch(GraphicsDevice);
             GlobalVars.Content = Content;
+            GlobalVars.GlobalRandom = new System.Random();
 
 
             //Load Fonts, Textures and Sounds
@@ -61,8 +62,10 @@ namespace ParticleEngine
             Sounds.Load();
 
             //Add the example screen to the Screen Manager
-            ScreenManager.AddScreen(new ExampleScreenRain()); //comment this line for the snow screen
+            //ScreenManager.AddScreen(new ExampleScreenRain()); //comment this line for the snow screen
             //ScreenManager.AddScreen(new ExampleScreenSnow()); //uncomment this line for the snow screen
+
+            ScreenManager.AddScreen(new Screens.TestScreens.ScalingTest());
         }
 
         protected override void Update(GameTime gameTime)

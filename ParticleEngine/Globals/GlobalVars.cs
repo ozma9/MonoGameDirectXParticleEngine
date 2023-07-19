@@ -16,6 +16,7 @@ namespace ParticleEngine.Globals
         public static GameTime GameTime;
         public static bool WindowFocused;
         public static Rectangle GameSize;
+        public static Random GlobalRandom;
     }
     public struct TreeInformaton
     {
