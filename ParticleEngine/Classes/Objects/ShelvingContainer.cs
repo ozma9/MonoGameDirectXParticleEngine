@@ -1,5 +1,7 @@
-﻿using ParticleEngine.Classes.Objects;
+﻿using Microsoft.Xna.Framework;
+using ParticleEngine.Classes.Objects;
 using ParticleEngine.Enums;
+using ParticleEngine.Globals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,17 +15,21 @@ namespace ParticleEngine.Classes.Containers
         private List<ShelvingContainer> wareHouseRacking;
         private readonly byte maxCapacity;
 
+        private Vector2 position;
+        private Point size;
+
         public Fixturing Type => type;
         public List<ProductHolder> ProductShelves => productShelves;
         public List<ShelvingContainer> WareHouseRacking => wareHouseRacking;
         public byte MaxCapacity => maxCapacity;
 
 
-        public Fixture(Fixturing _type)
+        public Fixture(Fixturing _type, Vector2 _pos)
         {
             type = _type;
             productShelves = new List<ProductHolder>();
             wareHouseRacking = new List<ShelvingContainer>();
+            position = _pos;
 
             switch (type)
             {
@@ -52,6 +58,38 @@ namespace ParticleEngine.Classes.Containers
 
                         break;
                 }
+            }
+
+        }
+
+        public void Draw()
+        {
+
+
+            switch (Type)
+            {
+                case Fixturing.ShopFloorDisplay:
+
+                    Globals.GlobalVars.SpriteBatch.Draw(Globals.Textures.shelfNew, position, Color.White);
+
+                    for (int x = 0; x <= productShelves.Count - 1; x++)
+                    {
+                        string _products = "";
+
+                        foreach (Product _p in productShelves[x].Products)
+                        {
+                            _products += "i:"+_p.ID + "(s:" + _p.Stock + ") ";
+                        }
+
+
+                        Globals.GlobalVars.SpriteBatch.DrawString(
+                            Fonts.Calibri,
+                            "Shelf" + (x + 1) + " P: " + productShelves[x].Products.Count.ToString() + " C:" + _products,
+                            new Vector2(position.X, (position.Y + 128) + (x * 15)),
+                            Color.Green);
+                    }
+
+                    break;
             }
 
         }
@@ -237,25 +275,25 @@ namespace ParticleEngine.Classes.Containers
             {
                 foreach (Product _foundProduct in products)
                 {
-                    if (_productToAdd == _foundProduct && _foundProduct.Stock < fillCapacity)// && products.Count < overallMaxCapacity)
+                    if (_productToAdd.ID == _foundProduct.ID && _foundProduct.Stock < fillCapacity)// && products.Count < overallMaxCapacity)
                     {
                         _foundProduct.ModifiyStock(1);
                         return true;
                     }
+                    // return false;
                 }
 
-                return false;
-            }
 
+            }
 
             if (products.Count < overallMaxCapacity)
             {
+                _productToAdd.ModifiyStock(1);
                 products.Add(_productToAdd);
                 return true;
             }
 
             return false;
-
         }
 
         public bool RemoveProduct(Product _productToRemove)

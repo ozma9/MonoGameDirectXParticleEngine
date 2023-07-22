@@ -22,9 +22,9 @@ namespace ParticleEngine.Classes.Objects
         public decimal Price => price;
         public byte Stock => stock;
 
-        public Product()
+        public Product(int _id)
         {
-
+            id = _id;
         }
 
         public void ModifiyStock(int _amount)

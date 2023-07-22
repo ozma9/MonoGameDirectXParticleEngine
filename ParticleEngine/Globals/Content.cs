@@ -33,7 +33,9 @@ namespace ParticleEngine.Globals
         public static Texture2D grass;
         public static Texture2D snow;
         public static Texture2D trees;
+
         public static Texture2D systemTiles;
+        public static Texture2D shelfNew;
 
         public static void Load()
         {
@@ -43,6 +45,7 @@ namespace ParticleEngine.Globals
             trees = GlobalVars.Content.Load<Texture2D>("Textures/trees");
 
             systemTiles = GlobalVars.Content.Load<Texture2D>("Textures/System");
+            shelfNew = GlobalVars.Content.Load<Texture2D>("Textures/ShelfNew");
         }
 
     }

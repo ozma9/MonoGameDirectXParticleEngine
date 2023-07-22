@@ -65,7 +65,8 @@ namespace ParticleEngine
             //ScreenManager.AddScreen(new ExampleScreenRain()); //comment this line for the snow screen
             //ScreenManager.AddScreen(new ExampleScreenSnow()); //uncomment this line for the snow screen
 
-            ScreenManager.AddScreen(new Screens.TestScreens.ScalingTest());
+            //ScreenManager.AddScreen(new Screens.TestScreens.ScalingTest());
+            ScreenManager.AddScreen(new Screens.TestScreens.StockSystemTest());
         }
 
         protected override void Update(GameTime gameTime)
